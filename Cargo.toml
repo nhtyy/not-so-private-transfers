@@ -1,0 +1,8 @@
+[workspace]
+name = "not-so-private"
+version = "0.1.0"
+edition = "2024"
+members = ["bin", "lib"]
+
+[workspace.dependencies]
+alloy = { version = "1.0.37" }
