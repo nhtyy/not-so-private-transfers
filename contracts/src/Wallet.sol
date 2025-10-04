@@ -49,7 +49,7 @@ contract Wallet {
      * @dev This fallback function does not allow the wallet to accept native value after deployment.
      */
     fallback() external payable {
-        // Immutables are not accesiable from within assembly ;(
+        // Immutables are not accesable from within assembly ;(
         assembly {
             if iszero(eq(caller(), sload(deployer.slot))) {
                 mstore(0, 0x8b906c97)
