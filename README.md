@@ -22,3 +22,6 @@ Note that we dont want to do the sweep in the constructor, as that would change 
 ### `contracts/`
 
 - This is the solidity implentation of the "Not So Private Transfers" protocol.
+
+> [!WARNING]  
+> The smart contracts in this repo have not been audited!
