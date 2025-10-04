@@ -53,7 +53,7 @@ contract CounterTest is Test {
 
         bytes memory callData = abi.encodeWithSelector(CallTarget.setState.selector, (expectedValue));
 
-        deployWallet(address(callTarget), 0, callData);
+        address wallet = deployWallet(address(callTarget), 0, callData);
 
         assertEq(callTarget.value(), expectedValue);
 
@@ -64,6 +64,10 @@ contract CounterTest is Test {
         // It should revert because the caller is not the owner
         vm.expectRevert(IDeployer.WalletNotDeployed.selector);
         deployer.ownerCall(salt(), address(callTarget), 0, wrongValueCallData);
+
+        // It should revert because the caller is not the owner
+        vm.expectRevert(Wallet.NotDeployer.selector);
+        LibWallet.makeCall(wallet, address(callTarget), 0, wrongValueCallData);
     }
 
     function testOwnerCanMakeCall() public {
