@@ -15,10 +15,11 @@ contract Wallet {
     error NotDeployer();
 
     /// @dev The deployer contract for this wallet.
-    address immutable DEPLOYER;
+    address deployer;
 
     constructor() payable {
-        DEPLOYER = msg.sender;
+        // Note we store this in storage for now to keep the bytecode size as small as posible
+        deployer = msg.sender;
     }
 
     /**
@@ -30,11 +31,13 @@ contract Wallet {
      * @dev This fallback function does not allow the wallet to accept native value after deployment.
      */
     fallback() external payable {
-        if (msg.sender != DEPLOYER) {
-            revert NotDeployer();
-        }
-
+        // Immutables are not accesiable from within assembly ;(
         assembly {
+            if iszero(eq(caller(), sload(deployer.slot))) {
+                mstore(0, 0x8b906c97)
+                revert(0, 0x04)
+            }
+
             let inSize := sub(calldatasize(), 0x40)
             calldatacopy(0, 0x40, inSize)
 

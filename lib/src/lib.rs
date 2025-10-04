@@ -6,7 +6,7 @@ mod config;
 pub use config::{ChainConfig, Config};
 
 pub const INIT_CODE_HASH: B256 =
-    b256!("0x7c6b95745344239e4c8e51a6224d258b4dc3c16dab24e2f6c620033acd225326");
+    b256!("0xaf0bf2d64f923a8db3d47c773d17f26cde8449f30f80af27f6627d603f467aba");
 
 /// Generate a cryptographically secure random salt for a wallet.
 pub fn random_salt() -> B256 {
