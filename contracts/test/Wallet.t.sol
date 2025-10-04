@@ -5,6 +5,7 @@ import {Test, console} from "forge-std/Test.sol";
 import {Wallet, LibWallet} from "src/Wallet.sol";
 import {Deployer} from "src/Deployer.sol";
 import {IDeployer} from "src/interface/IDeployer.sol";
+
 contract CallTarget {
     bytes32 public value = bytes32(0);
 
@@ -14,7 +15,6 @@ contract CallTarget {
 
     receive() external payable {}
 }
-
 
 contract CounterTest is Test {
     CallTarget public callTarget;

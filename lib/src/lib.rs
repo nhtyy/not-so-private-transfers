@@ -1,12 +1,12 @@
 mod relay;
-use alloy::primitives::{B256, FixedBytes, b256};
+use alloy::primitives::{B256, b256};
 pub use relay::{RelayAuthentication, auth_domain};
 
 mod config;
 pub use config::{ChainConfig, Config};
 
 pub const INIT_CODE_HASH: B256 =
-    b256!("0x62e14bf431c1d9122ac5bd07b039cf9bbd14ef67657d530332cc61533071fac8");
+    b256!("0x7c6b95745344239e4c8e51a6224d258b4dc3c16dab24e2f6c620033acd225326");
 
 /// Generate a cryptographically secure random salt for a wallet.
 pub fn random_salt() -> B256 {
@@ -19,8 +19,8 @@ mod test {
     use std::process::Command;
 
     use alloy::network::EthereumWallet;
-    use alloy::primitives::utils::parse_ether;
     use alloy::primitives::U256;
+    use alloy::primitives::utils::parse_ether;
     use alloy::providers::Provider;
     use alloy::rpc::types::TransactionRequest;
     use alloy::signers::local::LocalSigner;
@@ -33,7 +33,7 @@ mod test {
     /// Check if a command is installed.
     fn check_command_installed(command: &str) {
         if Command::new("which").arg(command).output().is_err() {
-            panic!("command `{}` not found in PATH", command);
+            panic!("command `{command}` not found in PATH");
         }
     }
 
@@ -118,12 +118,10 @@ mod test {
         // Ensure the Deployer is setup correctly.
         let anvil_config = deployments.get(anvil.chain_id()).unwrap();
         assert!(
-            provider
+            !provider
                 .get_code_at(anvil_config.verifying_contract)
                 .await
-                .expect("Failed to get code")
-                .len()
-                > 0,
+                .expect("Failed to get code").is_empty(),
             "expected verifying contract to be deployed"
         );
 
@@ -178,8 +176,14 @@ mod test {
             .await
             .expect("Failed to watch deploy");
 
-        let reciept = provider.get_transaction_receipt(tx_hash).await.expect("Failed to get transaction receipt").expect("Failed to get reciept");
-        let as_event = reciept.decode_first_log::<crate::relay::Deployer::Deployed>().expect("Failed to decode event");
+        let reciept = provider
+            .get_transaction_receipt(tx_hash)
+            .await
+            .expect("Failed to get transaction receipt")
+            .expect("Failed to get reciept");
+        let as_event = reciept
+            .decode_first_log::<crate::relay::Deployer::Deployed>()
+            .expect("Failed to decode event");
 
         // Assert that the wallet created was the one we predicted.
         assert_eq!(as_event.wallet, wallet_address);

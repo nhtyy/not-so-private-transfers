@@ -13,7 +13,7 @@ struct RelayAuthentication {
 interface IDeployer {
     /// @dev Error thrown when an authentication is already used.
     error AuthenticationAlreadyUsed();
-    
+
     /// @dev Error thrown when a wallet is not deployed.
     error WalletNotDeployed();
 
@@ -40,5 +40,7 @@ interface IDeployer {
     /// @notice Deploy a wallet with a relayer covering the gas costs.
     /// @param relayAuthentication The relayer
     /// @param signature The signature of the relay authentication.
-    function relayDeploy(RelayAuthentication calldata relayAuthentication, bytes memory signature) external returns (address);
+    function relayDeploy(RelayAuthentication calldata relayAuthentication, bytes memory signature)
+        external
+        returns (address);
 }

@@ -14,7 +14,8 @@ contract DeployerTest is Test {
     }
 
     function testExpectedAuthEip712Encoding() public view {
-        bytes memory encoded = hex"0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000f39fd6e51aad88f6f4ce6ab8827279cfffb9226651c83b551ce782ac775ea888601b2115ed93e9492522ec86adb2a05263e73d8a000000000000000000000000f39fd6e51aad88f6f4ce6ab8827279cfffb922660000000000000000000000000000000000000000000000000de0b6b3a764000000000000000000000000000000000000000000000000000000000000000000a00000000000000000000000000000000000000000000000000000000000000000";
+        bytes memory encoded =
+            hex"0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000f39fd6e51aad88f6f4ce6ab8827279cfffb9226651c83b551ce782ac775ea888601b2115ed93e9492522ec86adb2a05263e73d8a000000000000000000000000f39fd6e51aad88f6f4ce6ab8827279cfffb922660000000000000000000000000000000000000000000000000de0b6b3a764000000000000000000000000000000000000000000000000000000000000000000a00000000000000000000000000000000000000000000000000000000000000000";
         RelayAuthentication memory decoded = abi.decode(encoded, (RelayAuthentication));
 
         bytes32 structHash = deployer.eip712StructHash(decoded);
@@ -26,19 +27,14 @@ contract DeployerTest is Test {
         (address owner, uint256 pk) = makeAddrAndKey("owner_key");
         bytes32 salt = keccak256("salt");
         bytes32 actualSalt = keccak256(abi.encodePacked(salt, owner));
-        
+
         address wallet = vm.computeCreate2Address(actualSalt, keccak256(type(Wallet).creationCode), address(deployer));
         // Deal 1 ether to the wallet.
         vm.deal(wallet, 1 ether);
 
         // Send 1 ether back to the owner from the wallet.
-        RelayAuthentication memory auth = RelayAuthentication({
-            owner: owner,
-            salt: salt,
-            to: owner,
-            value: 1 ether,
-            data: bytes("")
-        });
+        RelayAuthentication memory auth =
+            RelayAuthentication({owner: owner, salt: salt, to: owner, value: 1 ether, data: bytes("")});
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(pk, deployer.eip712Digest(auth));
 

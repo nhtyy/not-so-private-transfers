@@ -1,7 +1,10 @@
 use std::collections::HashMap;
 use std::path::Path;
 
-use alloy::{primitives::{Address, B256}, sol_types::Eip712Domain};
+use alloy::{
+    primitives::{Address, B256},
+    sol_types::Eip712Domain,
+};
 use serde_json::Error as JsonError;
 
 use crate::auth_domain;
@@ -9,7 +12,7 @@ use crate::auth_domain;
 /// A mapping of chain ids to [`ChainConfig`].
 #[derive(Debug, Clone)]
 pub struct Config {
-    inner: HashMap<u64, Address>
+    inner: HashMap<u64, Address>,
 }
 
 impl Config {
@@ -55,7 +58,8 @@ impl ChainConfig {
 
         let actual_salt = alloy::primitives::keccak256(&salt_bytes);
 
-        self.verifying_contract.create2(actual_salt, crate::INIT_CODE_HASH)
+        self.verifying_contract
+            .create2(actual_salt, crate::INIT_CODE_HASH)
     }
 }
 

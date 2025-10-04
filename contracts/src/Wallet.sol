@@ -2,15 +2,10 @@
 pragma solidity ^0.8.13;
 
 library LibWallet {
-    function makeCall(
-        address wallet,
-        address to,
-        uint256 value,
-        bytes memory data
-    ) internal {
+    function makeCall(address wallet, address to, uint256 value, bytes memory data) internal {
         bytes memory _calldata = abi.encodePacked(abi.encode(to, value), data);
 
-        (bool succ, ) = wallet.call(_calldata);
+        (bool succ,) = wallet.call(_calldata);
 
         require(succ, "call failed.");
     }
@@ -43,17 +38,7 @@ contract Wallet {
             let inSize := sub(calldatasize(), 0x40)
             calldatacopy(0, 0x40, inSize)
 
-            if iszero(
-                call(
-                    gas(),
-                    calldataload(0),
-                    calldataload(0x20),
-                    0,
-                    inSize,
-                    codesize(),
-                    0x00
-                )
-            ) {
+            if iszero(call(gas(), calldataload(0), calldataload(0x20), 0, inSize, codesize(), 0x00)) {
                 returndatacopy(0x00, 0x00, returndatasize())
                 revert(0x00, returndatasize())
             }

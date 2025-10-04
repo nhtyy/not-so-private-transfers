@@ -1,7 +1,7 @@
 use alloy::{
     dyn_abi::Eip712Domain,
     primitives::{Address, Uint},
-    signers::{Signature, Signer, Error as SignerError},
+    signers::{Error as SignerError, Signature, Signer},
     sol_types::SolStruct,
 };
 
@@ -54,7 +54,7 @@ impl RelayAuthentication {
     ///
     /// This would be computed by the relayee, and the signature would be submitted
     /// by the relayer.
-    /// 
+    ///
     /// # Errors:
     /// - [`SignerError::Other`] if the signer address does not match the owner.
     pub async fn sign<S: Signer>(
@@ -63,7 +63,9 @@ impl RelayAuthentication {
         domain: &Eip712Domain,
     ) -> Result<Signature, SignerError> {
         if signer.address() != self.owner {
-            return Err(SignerError::Other("Signer address does not match owner".into()));
+            return Err(SignerError::Other(
+                "Signer address does not match owner".into(),
+            ));
         }
 
         signer.sign_hash(&self.eip712_signing_hash(domain)).await
