@@ -25,11 +25,13 @@ jobs:
           forge --version
 
       - name: Run Forge build
+        working-directory: contracts
         run: |
           forge build --sizes
         id: build
 
       - name: Run Forge tests
+        working-directory: contracts
         run: |
           forge test -vvv
         id: test
