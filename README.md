@@ -11,6 +11,8 @@ Currently, this repo uses create2 to deploy to a determinstic address and atomic
 
 In the future this could be done better by using using clones, or ideally, rewriting the `Wallet.sol` contract to just be some short sequence of opcodes, as the logic is quite simple.
 
+Note that we dont want to do the sweep in the constructor, as that would change the `init_code_hash`, efficively making you commit to call youre going to make for determinism.
+
 ## Layout
 
 ### `lib/`
